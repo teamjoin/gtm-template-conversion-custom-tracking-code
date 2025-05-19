@@ -73,6 +73,7 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 // Saisissez le code de votre modèle ici.
 const callInWindow = require('callInWindow');
 const log = require('logToConsole');
+const copyFromWindow = require('copyFromWindow');
 
 
 const payload = {
@@ -81,15 +82,14 @@ const payload = {
   conversion_name: data.conversion_name
 };
 
-log('payload =', payload);
+const fn = copyFromWindow('JoinStories.sendConversion');
 
-const call = callInWindow("JoinStories.sendConversion", payload);
-
-if (call) {
-  log('[Success] Join Stories - Checkout Tracking Code.');
+if (fn) {
+  callInWindow('JoinStories.sendConversion', payload);
+  log('[Success] Join Stories - Custom Conversion Code.', payload);
   data.gtmOnSuccess();
 } else {
-  log('[Failed] Join Stories - Checkout Tracking Code : sendConversion not found.');
+  log('[Failed] Join Stories - Custom Conversion Code : sendConversion not found.');
   data.gtmOnFailure();
 }
 
@@ -108,7 +108,7 @@ ___WEB_PERMISSIONS___
           "key": "environments",
           "value": {
             "type": 1,
-            "string": "debug"
+            "string": "all"
           }
         }
       ]
@@ -157,7 +157,7 @@ ___WEB_PERMISSIONS___
                   },
                   {
                     "type": 8,
-                    "boolean": false
+                    "boolean": true
                   },
                   {
                     "type": 8,
@@ -184,7 +184,22 @@ ___WEB_PERMISSIONS___
 
 ___TESTS___
 
-scenarios: []
+scenarios:
+- name: Test
+  code: |-
+    const mockData = {
+      // Mocked field values
+      conversion_id: "id",
+      conversion_type: "type",
+      conversion_name: "name"
+    };
+
+    // Call runCode to run the template's code.
+    runCode(mockData);
+
+    // Verify that the tag finished successfully.
+    assertApi('gtmOnSuccess').wasCalled();
+setup: ''
 
 
 ___NOTES___
