@@ -1,5 +1,9 @@
 homepage: "https://join-stories.com"
 documentation: "https://help.join-stories.com"
 versions:
+  # Latest version
+  - sha: dc50701ad64d9dc623331ee207258a738767e44f
+    changeNotes: Fix issue with call in window.
+  # Previous version
   - sha: 8cc86348fe8041f9a59376c1e47632fffe294b68
     changeNotes: Initial release.
